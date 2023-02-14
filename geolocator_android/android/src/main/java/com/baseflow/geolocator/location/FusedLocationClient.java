@@ -123,6 +123,7 @@ class FusedLocationClient implements LocationClient {
 
   @SuppressLint("MissingPermission")
   private void requestPositionUpdates(LocationOptions locationOptions) {
+    Log.i(TAG, "[WorkBug] requestPositionUpdates - locationOptions: "+ locationOptions.toString());
     LocationRequest locationRequest = buildLocationRequest(locationOptions);
     this.nmeaClient.start();
     fusedLocationProviderClient.requestLocationUpdates(
@@ -142,6 +143,13 @@ class FusedLocationClient implements LocationClient {
               LocationSettingsResponse lsr = response.getResult();
               if (lsr != null) {
                 LocationSettingsStates settingsStates = lsr.getLocationSettingsStates();
+                Log.i(TAG, "[WorkBug] getLocationSettingsStates");
+                Log.i(TAG, "--[WorkBug] isGpsPresent : "+ settingsStates.isGpsPresent());
+                Log.i(TAG, "--[WorkBug] isGpsUsable : "+ settingsStates.isGpsUsable());
+                Log.i(TAG, "--[WorkBug] isNetworkLocationPresent : "+ settingsStates.isNetworkLocationPresent());
+                Log.i(TAG, "--[WorkBug] isNetworkLocationUsable : "+ settingsStates.isNetworkLocationUsable());
+                Log.i(TAG, "--[WorkBug] isLocationPresent : "+ settingsStates.isLocationPresent());
+                Log.i(TAG, "--[WorkBug] isLocationUsable : "+ settingsStates.isLocationUsable());
                 boolean isGpsUsable = settingsStates != null && settingsStates.isGpsUsable();
                 boolean isNetworkUsable =
                     settingsStates != null && settingsStates.isNetworkLocationUsable();
@@ -171,7 +179,9 @@ class FusedLocationClient implements LocationClient {
 
   public boolean onActivityResult(int requestCode, int resultCode) {
     if (requestCode == activityRequestCode) {
+      Log.i(TAG, "[WorkBug] onActivityResult - requestCode : "+ requestCode + " resultCode : "+ resultCode);
       if (resultCode == Activity.RESULT_OK) {
+        Log.i(TAG, "--[WorkBug] resultCode == RESULT_OK")
         if (this.locationOptions == null
             || this.positionChangedCallback == null
             || this.errorCallback == null) {
@@ -182,6 +192,7 @@ class FusedLocationClient implements LocationClient {
 
         return true;
       } else {
+        Log.i(TAG, "--[WorkBug] resultCode != RESULT_OK")
         if (errorCallback != null) {
           errorCallback.onError(ErrorCodes.locationServicesDisabled);
         }
@@ -210,7 +221,9 @@ class FusedLocationClient implements LocationClient {
             locationSettingsResponse -> requestPositionUpdates(this.locationOptions))
         .addOnFailureListener(
             e -> {
+              Log.i(TAG, "[WorkBug] onFailureListener");
               if (e instanceof ResolvableApiException) {
+                Log.i(TAG, "--[WorkBug] Exception is ResolvableApiException: "+e.getMessage());
                 // When we don't have an activity return an error code explaining the
                 // location services are not enabled
                 if (activity == null) {
@@ -221,6 +234,7 @@ class FusedLocationClient implements LocationClient {
                 ResolvableApiException rae = (ResolvableApiException) e;
                 int statusCode = rae.getStatusCode();
                 if (statusCode == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                  Log.i(TAG, "--[WorkBug] Exception statusCode is RESOLUTION_REQUIRED");
                   try {
                     // Show the dialog by calling startResolutionForResult(), and check the
                     // result in onActivityResult().
@@ -232,6 +246,7 @@ class FusedLocationClient implements LocationClient {
                   errorCallback.onError(ErrorCodes.locationServicesDisabled);
                 }
               } else {
+                Log.i(TAG, "--[WorkBug] Exception is ApiException : "+e.getMessage());
                 ApiException ae = (ApiException) e;
                 int statusCode = ae.getStatusCode();
                 if (statusCode == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE) {
