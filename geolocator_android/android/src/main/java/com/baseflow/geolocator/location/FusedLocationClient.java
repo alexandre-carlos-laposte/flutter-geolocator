@@ -181,7 +181,7 @@ class FusedLocationClient implements LocationClient {
     if (requestCode == activityRequestCode) {
       Log.i(TAG, "[WorkBug] onActivityResult - requestCode : "+ requestCode + " resultCode : "+ resultCode);
       if (resultCode == Activity.RESULT_OK) {
-        Log.i(TAG, "--[WorkBug] resultCode == RESULT_OK")
+        Log.i(TAG, "--[WorkBug] resultCode == RESULT_OK");
         if (this.locationOptions == null
             || this.positionChangedCallback == null
             || this.errorCallback == null) {
@@ -192,7 +192,7 @@ class FusedLocationClient implements LocationClient {
 
         return true;
       } else {
-        Log.i(TAG, "--[WorkBug] resultCode != RESULT_OK")
+        Log.i(TAG, "--[WorkBug] resultCode != RESULT_OK");
         if (errorCallback != null) {
           errorCallback.onError(ErrorCodes.locationServicesDisabled);
         }
