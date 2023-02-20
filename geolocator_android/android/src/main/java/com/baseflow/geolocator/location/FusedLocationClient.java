@@ -220,7 +220,6 @@ class FusedLocationClient implements LocationClient {
                 }
 
                 ResolvableApiException rae = (ResolvableApiException) e;
-                rae.getResolution()
                 int statusCode = rae.getStatusCode();
                 if (statusCode == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
                   try {
